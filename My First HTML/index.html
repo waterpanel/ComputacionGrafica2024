@@ -15,6 +15,15 @@
     <script>
         alert("Webos");
     </script>
+     <script>
+        function MostrarFecha(){
+            const hoy = new Date();  // Estoy creando una funcion que crea una constante en la que vamos a almacenar la fecha
+            const fechaReseteada = hoy.toLocaleDateString(); //crea una constante en la cueal va a poner la fecha actual en cadena de texto
+            document.getElementById("Fecha").innerText = fechaReseteada;//"document" representa todo el doc HTML, "getelement" busca un elemento en el codigo por ID y "innertext" reescribe lo que haya escrito en una etiqueta de texto
+        }
+    </script>
+   
+    
 </head>
 <body>
     <h1>Hello World!</h1>
@@ -23,7 +32,7 @@
     <h4>Hello World!</h4>
     <h5>Hello World!</h5>
     <p class="myText">Maecenas dui massa, gravida vitae ipsum id, fringilla accumsan nibh. Suspendisse vel arcu id metus maximus vulputate in id ligula. Nulla quis finibus nisi, in maximus mauris. In et ex ligula. Duis blandit posuere justo sed rutrum. Curabitur facilisis mollis cursus. Vivamus maximus eget mi eget facilisis. Proin rhoncus dignissim risus vel sodales. In hac habitasse platea dictumst. Cras lobortis, turpis in semper ullamcorper, nulla quam suscipit urna, quis dignissim velit ante faucibus ex. Sed rutrum cursus tincidunt. Sed pulvinar, enim id eleifend vestibulum, risus arcu varius augue, et vulputate lacus ligula ut urna. Praesent venenatis tempor neque.</p>
-    <p>Kelly <strong>Daniella </strong><em>Marin</em></p>
+    <p>Santiago <strong>Vaca </strong><em>Pérez</em></p>
     <svg width="100" height="100">
         <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
     </svg>
@@ -32,7 +41,12 @@
         style="fill:red;stroke:black;stroke-width:1;opacity:0.5" />
     </svg>
 
-    <img id="myImageSVG" name="myImageSVG" src="./src/svg/papas-fritas.svg" alt="Papas Fritas">
+    <img id="Meltan" name="Meltan" src="./src/img/meltan.png" alt="Papas Fritas"
+    width="200" height="100">
+
+    <button onclick="MostrarFecha()">Mostrar Fecha Actual</button>
+    <p id= "Fecha"></p>
+   
     
 </body>
 </html>

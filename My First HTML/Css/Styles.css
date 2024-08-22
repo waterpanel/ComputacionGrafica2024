@@ -12,7 +12,10 @@
         }
 
         /* id */
-        #myImageSVG{
+        #Meltan{
             background-color: aqua;
+            border-color: darkblue;
+            position: x=100 y=100;
+
         }
 
