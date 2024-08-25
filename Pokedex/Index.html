@@ -1,0 +1,49 @@
+<!--
+    Author(a): Santiago Vaca Pérez
+    Date of the creation: 25/08/2024
+    Last Modification: 25/08/2024 | 04:10Pm
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Etiqueta fundamental para una pagina web responsive-->
+    <title>Pokedex Waterpanel</title>
+    <link rel="stylesheet" href="Styles.css">
+    
+</head>
+
+<body>
+    <div class="container">
+        <h1>Buscador de Pokémon</h1>
+
+        <div class="cards"><!--Creo la classe cartas en la div en la que voy a colocar las cartas-->
+            <div class="card one"><!--Carta 1(Logo)-->     
+            </div>
+
+            <div class="card two"><!--Carta 2-->
+                <input type="text" id="PokemonInput1" placeholder="Nombre o num de Pokemon"><br> <!--Creo un input para que escriban el numero o nombre del pokemon-->
+                <button onclick="BuscarPokemon(1)">Buscar Pokemon</button>
+                <div id="PokemonInfo1"></div>
+            </div>
+
+            <div class="card three"><!--Carta 3-->
+                <input type="text" id="PokemonInput2" placeholder="Nombre o num de Pokemon"><br> <!--Creo un input para que escriban el numero o nombre del pokemon-->
+                <button onclick="BuscarPokemon(2)">Buscar Pokemon</button>
+                <div id="PokemonInfo2"></div>
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <script src="Script.js"></script>
+</body>
+
+</html>
