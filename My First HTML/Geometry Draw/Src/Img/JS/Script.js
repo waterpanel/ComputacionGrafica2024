@@ -63,3 +63,22 @@ function Producto(){
 
     
 }
+
+
+function Magnitud(){
+    let vx = Number(document.getElementById("MvectorVX").value);
+    let vy = Number(document.getElementById("MvectorVY").value);
+    let vz = Number(document.getElementById("MvectorVZ").value);
+
+
+    let x = Math.pow(vx,2);
+    let y = Math.pow(vy,2);
+    let z = Math.pow(vz,2);
+ 
+
+  let M = Math.sqrt((x+y+z),2);
+  let Magnitud = parseFloat(M.toFixed(2));//para que lo aproxime a dos cifras
+
+   
+    document.getElementById("resultMagnitud").innerHTML = Magnitud;
+}
