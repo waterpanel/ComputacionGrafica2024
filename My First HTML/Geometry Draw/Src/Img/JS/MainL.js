@@ -21,10 +21,21 @@ function startScene(){
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);//agrega al cuerpo del documento en el canvas
 
+    //orbit controls
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    camera.position.set(0,0,0);
+    controls.update();
+
+    //grid Helper
+    const size = 10;
+    const divisions = 10;
+    
+    const gridHelper = new THREE.GridHelper( size, divisions );
+    scene.add( gridHelper );
 
     //creacion de un cubo
     const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    const material = new THREE.MeshBasicMaterial( { color: 0x0191970} );
     const cube = new THREE.Mesh( geometry, material );
     scene.add( cube );
 
@@ -34,5 +45,17 @@ function startScene(){
 }
 
 function animate(){
+    requestAnimationFrame(animate);//lo que hace es ejecutar frame por frame cada cambio
+    controls.update;
     renderer.render( scene, camera );
+}
+
+window.addEventListener( 'resize', onWindowResize, false );//para que haga una especie de "responsive"
+function onWindowResize(){
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
 }
