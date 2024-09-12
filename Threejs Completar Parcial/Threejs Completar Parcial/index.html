@@ -1,0 +1,172 @@
+<!--
+    Author(a): Santiago Vaca Pérez
+    Date of the creation: 12/09/2024
+    Last Modification: 12/09/2024 | 10:14Pm
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <title>Graficador de Vectores 3D</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+        #controls {
+            position: absolute;
+            top: 80px; /* Ajusta este valor según el alto del navbar */
+            left: 10px;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+    <link rel="stylesheet" href="Styles.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar bg-dark"><!--data-bs-theme="dark"-->
+            <div class="container-fluid">
+                <a class="navbar-brand" style="color: white;" href="#">Geometry Dash</a>
+                <a style="color: whitesmoke;" href="./Views/Objects.html">3D Visualisation</a>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Author(S)
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Author(S)</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Santiago Vaca Pérez - 97537
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div id="controls">
+        <h4>Punto A</h4>
+        <label for="ax">X:</label>
+        <input type="number" id="ax" value="0" style="width: 100px;">
+        <label for="ay">Y:</label>
+        <input type="number" id="ay" value="0" style="width: 100px;">
+        <label for="az">Z:</label>
+        <input type="number" id="az" value="0" style="width: 100px;">
+        <h4>Punto B</h4>
+        <label for="bx">X:</label>
+        <input type="number" id="bx" value="1" style="width: 100px;">
+        <label for="by">Y:</label>
+        <input type="number" id="by" value="1" style="width: 100px;">
+        <label for="bz">Z:</label>
+        <input type="number" id="bz" value="1" style="width: 100px;">
+        <button onclick="addVector()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Añadir Vector</button>
+        <br>
+        <br>
+        <span id="result">Resultado...</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        // Variables principales
+        let scene, camera, renderer, controls;
+        
+        init();
+        animate();
+
+        function init() {
+            // Crear escena
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xb4bac9);
+
+            // Crear cámara
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(5, 5, 5);
+
+            // Renderizador
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Controles de órbita
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            // Ejes (X en rojo, Y en verde, Z en azul)
+            const axesHelper = new THREE.AxesHelper(5);
+            scene.add(axesHelper);
+        }
+
+        // Función para crear un vector como flecha
+        function createVector(x, y, z) {
+            const origen = new THREE.Vector3(0, 0, 0); // Punto de origen
+            const direccion = new THREE.Vector3(x, y, z); // Dirección del vector
+            direccion.normalize(); // Normalizar la dirección
+
+            const magnitud = Math.sqrt(x * x + y * y + z * z); // Magnitud del vector
+            const colorAleatorio = Math.random() * 0xffffff; // Color aleatorio
+
+            const arrowHelper = new THREE.ArrowHelper(direccion, origen, magnitud, colorAleatorio);
+            scene.add(arrowHelper);
+        }
+
+        // Función para añadir un vector calculado entre dos puntos
+        function addVector() {
+            // Obtener las coordenadas del punto A
+            const ax = parseFloat(document.getElementById('ax').value);
+            const ay = parseFloat(document.getElementById('ay').value);
+            const az = parseFloat(document.getElementById('az').value);
+            
+            // Obtener las coordenadas del punto B
+            const bx = parseFloat(document.getElementById('bx').value);
+            const by = parseFloat(document.getElementById('by').value);
+            const bz = parseFloat(document.getElementById('bz').value);
+            
+            // Calcular las componentes del vector (B - A)
+            const Vx = bx - ax;
+            const Vy = by - ay;
+            const Vz = bz - az;
+
+            // Crear el vector
+            createVector(Vx, Vy, Vz);
+            
+            let VectorFinal = `(${Vx},${Vy},${Vz})`
+   
+            document.getElementById("result").innerHTML = VectorFinal
+        }
+
+        // Ajustar tamaño de pantalla al cambiar tamaño de la ventana
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        // Animación y renderizado
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // Actualizar controles de órbita
+            renderer.render(scene, camera);
+        }
+    </script>
+
+</body>
+</html>

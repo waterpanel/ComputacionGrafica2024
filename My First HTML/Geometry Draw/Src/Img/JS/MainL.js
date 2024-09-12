@@ -33,13 +33,25 @@ function startScene(){
     const gridHelper = new THREE.GridHelper( size, divisions );
     scene.add( gridHelper );
 
-    //creacion de un cubo
+    /*//creacion de un cubo
     const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    const material = new THREE.MeshBasicMaterial( { color: 0x0191970} );
+    const material = new THREE.MeshBasicMaterial( { color: 0xf7f7f8} );
     const cube = new THREE.Mesh( geometry, material );
     scene.add( cube );
 
     camera.position.z = 5;
+    animate();*/
+    const dir = new THREE.Vector3(4, 2, 7); // Dirección del vector
+    dir.normalize(); // Normaliza el vector
+
+    const origin = new THREE.Vector3(0, 0, 0); // Origen del vector
+    const length = 2; // Longitud del vector
+    const hex = 0xf7f7f8; // Color del vector
+
+    const arrowHelper = new THREE.ArrowHelper(dir, origin, length, hex);
+    scene.add(arrowHelper);
+    camera.position.z = 5;
+
     animate();
 
 }
