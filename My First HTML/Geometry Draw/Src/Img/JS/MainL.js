@@ -58,27 +58,25 @@ function onWindowResize() {
 
 // Crear geometría y agregarla a la escena
 function createGeometry(geometryDraw) { 
+    var randomColor = +('0x' + Math.floor(Math.random()*16777215).toString(16));
     var geometryFigure = null;
 
     switch(geometryDraw) {
         case 'Box':
             geometryFigure = new THREE.BoxGeometry(3, 3, 3);
+            drawObjects(geometryFigure,randomColor)
             break;
         case 'Torus':
             geometryFigure = new THREE.TorusGeometry(2, 0.8, 32, 100);
+            drawObjects(geometryFigure,randomColor)
             break;
         case 'Cone':
-            geometryFigure = new THREE.ConeGeometry(2, 3, 40);
+            geometryFigure = new THREE.ConeGeometry(2, 3, 60);
+            drawObjects(geometryFigure,randomColor)
             break;
     }
 
-    var randomColor = +('0x' + Math.floor(Math.random()*16777215).toString(16));
-    const material = new THREE.MeshPhysicalMaterial( { color: randomColor,roghness: 0.1, metalness: 2} );
-    const objectDraw = new THREE.Mesh( geometryFigure, material );
-    scene.add( objectDraw );
     
-    scene.add(objectDraw);
-    createdObjects.push(objectDraw);  // Agregar la figura al arreglo
 }
 
 // Eliminar todas las geometrías creadas
@@ -87,4 +85,22 @@ function deleteGeometry() {
         scene.remove(createdObjects[i]);  // Eliminar cada objeto de la escena
     }
     createdObjects = [];  // Vaciar el arreglo después de eliminar los objetos
+
+
+}
+
+function drawObjects(geometryFigure, col){
+
+   
+    const material = new THREE.MeshPhysicalMaterial( { color: col,roghness: 0.1, metalness: 0.5} );
+    const objectDraw = new THREE.Mesh( geometryFigure, material );
+    scene.add( objectDraw );
+    
+    scene.add(objectDraw);
+    createdObjects.push(objectDraw);  // Agregar la figura al arreglo
+}
+
+function callParameters(geometryFigure){
+    var validateParameters = fasle;
+    var col = +('0x' + Math.floor(Math.random()*16777215).toString(16));
 }
