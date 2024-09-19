@@ -1,4 +1,3 @@
-//creation of basic elements
 var scene = null;
 var camera = null;
 var renderer = null;
@@ -6,7 +5,6 @@ var controls = null;
 var createdObjects = [];  // Arreglo para almacenar los objetos creados
 
 function startScene() {
-    //scene, camera, renderer
     scene = new THREE.Scene(),
     scene.background = new THREE.Color(0xb4bac9);
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / innerHeight, 0.1, 1000);
@@ -27,21 +25,17 @@ function startScene() {
     camera.position.z = 5;
     animate();
 
-
-
     //pointlight + helper
     const pointLight = new THREE.PointLight( 0xFFFFFF, 2, 100 );// color, intensidad, rango
-pointLight.position.set( 13, 13, 13 );
-scene.add( pointLight );
+    pointLight.position.set( 13, 13, 13 );
+    scene.add( pointLight );
 
-const sphereSize = 1;
-const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-scene.add( pointLightHelper );
-
-
- 
+    const sphereSize = 1;
+    const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+    scene.add( pointLightHelper );
 }
 
+// Animación de la escena
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
@@ -56,27 +50,84 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// Crear geometría y agregarla a la escena
-function createGeometry(geometryDraw) { 
-    var randomColor = +('0x' + Math.floor(Math.random()*16777215).toString(16));
-    var geometryFigure = null;
+// Mostrar los inputs dinámicos según la figura seleccionada
+function showInputs(geometryDraw) {
+    const formContainer = document.getElementById("input-form");
+    formContainer.innerHTML = '';  // Limpiar los inputs anteriores
 
-    switch(geometryDraw) {
+    switch (geometryDraw) {
         case 'Box':
-            geometryFigure = new THREE.BoxGeometry(3, 3, 3);
-            drawObjects(geometryFigure,randomColor)
+            formContainer.innerHTML = `
+                <label for="width">Width:</label>
+                <input type="number" id="width" value="3">
+                <label for="height">Height:</label>
+                <input type="number" id="height" value="3">
+                <label for="depth">Depth:</label>
+                <input type="number" id="depth" value="3">
+                <button class="btn btn-primary mt-2" onclick="createGeometry('Box')" >Create Box</button >`;
             break;
+            
         case 'Torus':
-            geometryFigure = new THREE.TorusGeometry(2, 0.8, 32, 100);
-            drawObjects(geometryFigure,randomColor)
+            formContainer.innerHTML = `
+                <label for="radius">Radius:</label>
+                <input type="number" id="radius" value="2">
+                <label for="tube">Tube:</label>
+                <input type="number" id="tube" value="0.8">
+                <label for="radialSegments">Radial Segments:</label>
+                <input type="number" id="radialSegments" value="32">
+                <label for="tubularSegments">Tubular Segments:</label>
+                <input type="number" id="tubularSegments" value="100">
+                <button class="btn btn-primary mt-2" onclick="createGeometry('Torus')">Create Torus</button>`;
             break;
         case 'Cone':
-            geometryFigure = new THREE.ConeGeometry(2, 3, 60);
-            drawObjects(geometryFigure,randomColor)
+            formContainer.innerHTML = `
+                <label for="radius">Radius:</label>
+                <input type="number" id="radius" value="2">
+                <label for="height">Height:</label>
+                <input type="number" id="height" value="3">
+                <label for="radialSegments">Radial Segments:</label>
+                <input type="number" id="radialSegments" value="60">
+                <button class="btn btn-primary mt-2" onclick="createGeometry('Cone')">Create Cone</button>`;
             break;
     }
+}
 
-    
+// Crear geometría usando los valores ingresados
+function createGeometry(geometryDraw) { 
+    var randomColor = +('0x' + Math.floor(Math.random() * 16777215).toString(16));
+    var geometryFigure = null;
+
+    switch (geometryDraw) {
+        case 'Box':
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const depth = parseFloat(document.getElementById('depth').value);
+            geometryFigure = new THREE.BoxGeometry(width, height, depth);
+            drawObjects(geometryFigure, randomColor);
+            break;
+        case 'Torus':
+            const radius = parseFloat(document.getElementById('radius').value);
+            const tube = parseFloat(document.getElementById('tube').value);
+            const radialSegments = parseFloat(document.getElementById('radialSegments').value);
+            const tubularSegments = parseFloat(document.getElementById('tubularSegments').value);
+            geometryFigure = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments);
+            drawObjects(geometryFigure, randomColor);
+            break;
+        case 'Cone':
+            const coneRadius = parseFloat(document.getElementById('radius').value);
+            const coneHeight = parseFloat(document.getElementById('height').value);
+            const coneRadialSegments = parseFloat(document.getElementById('radialSegments').value);
+            geometryFigure = new THREE.ConeGeometry(coneRadius, coneHeight, coneRadialSegments);
+            drawObjects(geometryFigure, randomColor);
+            break;
+    }
+}
+
+function drawObjects(geometryFigure, col) {
+    const material = new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.1, metalness: 0.5 });
+    const objectDraw = new THREE.Mesh(geometryFigure, material);
+    scene.add(objectDraw);
+    createdObjects.push(objectDraw);  // Agregar la figura al arreglo
 }
 
 // Eliminar todas las geometrías creadas
@@ -85,22 +136,5 @@ function deleteGeometry() {
         scene.remove(createdObjects[i]);  // Eliminar cada objeto de la escena
     }
     createdObjects = [];  // Vaciar el arreglo después de eliminar los objetos
-
-
 }
 
-function drawObjects(geometryFigure, col){
-
-   
-    const material = new THREE.MeshPhysicalMaterial( { color: col,roghness: 0.1, metalness: 0.5} );
-    const objectDraw = new THREE.Mesh( geometryFigure, material );
-    scene.add( objectDraw );
-    
-    scene.add(objectDraw);
-    createdObjects.push(objectDraw);  // Agregar la figura al arreglo
-}
-
-function callParameters(geometryFigure){
-    var validateParameters = fasle;
-    var col = +('0x' + Math.floor(Math.random()*16777215).toString(16));
-}
