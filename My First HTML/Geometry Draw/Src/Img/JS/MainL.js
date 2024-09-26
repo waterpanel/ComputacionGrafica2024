@@ -4,6 +4,8 @@ var renderer = null;
 var controls = null;
 var createdObjects = [];  // Arreglo para almacenar los objetos creados
 var light = null;
+var cube1 = null;
+var cube2 =  null;
 
 function startScene() {
     scene = new THREE.Scene(),
@@ -24,11 +26,42 @@ function startScene() {
     scene.add(gridHelper);
 
     camera.position.z = 5;
-    animate();
+    
 
     //light
     createLight("spot");
-   
+
+    const texture = new THREE.TextureLoader().load('../Src/Img/Img/Faces/uv_test_bw_1024.png')
+
+    //caja con material (tablero de ajedrez)
+    const geometryBox1 = new THREE.BoxGeometry( 1, 1, 1 ); 
+const materialBox1 = new THREE.MeshBasicMaterial( {color: 0xf8f9fa  , map: texture, side: THREE.DoubleSide } ); 
+cube1 = new THREE.Mesh( geometryBox1, materialBox1 ); 
+
+cube1.position.x = -2
+
+cube1.position.y = 2
+scene.add( cube1 );
+
+var materialCube = [new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../Src/Img/Img/Faces/face1.jpg'), side: THREE.DoubleSide }),
+                    new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../Src/Img/Img/Faces/face2.png'), side: THREE.DoubleSide }),
+                    new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../Src/Img/Img/Faces/face3.jpg'), side: THREE.DoubleSide }),
+                    new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../Src/Img/Img/Faces/face4.jpg'), side: THREE.DoubleSide }),
+                    new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../Src/Img/Img/Faces/face5.png'), side: THREE.DoubleSide }),
+                    new THREE.MeshBasicMaterial( {map: new THREE.TextureLoader().load('../Src/Img/Img/Faces/face6.jpg'), side: THREE.DoubleSide })
+];
+
+//caja con material (por cara)
+const geometryBox2 = new THREE.BoxGeometry( 1, 1, 1 ); 
+const materialBox2 = new THREE.MeshBasicMaterial( {color: 0xa476ff } ); 
+cube2 = new THREE.Mesh( geometryBox2, materialCube ); 
+
+cube2.position.x = 2
+cube2.position.y = 2
+
+scene.add( cube2 );
+
+animate();
 }
 
 function createLight(lightType) {
@@ -64,6 +97,8 @@ function createLight(lightType) {
 
 // Animación de la escena
 function animate() {
+    cube1.rotation.y += 0.01;
+    cube2.rotation.y += 0.01;
     requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
@@ -151,8 +186,31 @@ function createGeometry(geometryDraw) {
 }
 
 function drawObjects(geometryFigure, col) {
-    const material = new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.1, metalness: 0.5 });
-    const objectDraw = new THREE.Mesh(geometryFigure, material);
+
+    //standard
+    const materialStandard = new THREE.MeshStandardMaterial({ color: col, roughness: 0.1, metalness: 0.5 });
+   
+
+    //basic
+    const materialBasic = new THREE.MeshBasicMaterial({ color: col,wireframe: true, roughness: 0.1, metalness: 0.5});
+
+    //mesh normal material
+
+    const materialMeshNormalMaterial = new THREE.MeshNormalMaterial({ color: col,wireframe: false, transparent: false});
+
+    //mesh lambert Material
+
+    const materialMeshLambertMaterial = new THREE.MeshLambertMaterial({ color: col,emissive: 0xff0000, emissiveIntensity: 7});
+
+    //MeshToonMaterial
+
+    const materialMeshToonMaterial = new THREE.MeshToonMaterial({ color: col, gradientMap: null});
+
+
+    
+
+
+    const objectDraw = new THREE.Mesh(geometryFigure, materialMeshToonMaterial);
     scene.add(objectDraw);
     createdObjects.push(objectDraw);  // Agregar la figura al arreglo
 }
