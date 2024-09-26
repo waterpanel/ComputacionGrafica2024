@@ -3,6 +3,7 @@ var camera = null;
 var renderer = null;
 var controls = null;
 var createdObjects = [];  // Arreglo para almacenar los objetos creados
+var light = null;
 
 function startScene() {
     scene = new THREE.Scene(),
@@ -25,15 +26,41 @@ function startScene() {
     camera.position.z = 5;
     animate();
 
-    //pointlight + helper
-    const pointLight = new THREE.PointLight( 0xFFFFFF, 2, 100 );// color, intensidad, rango
-    pointLight.position.set( 13, 13, 13 );
-    scene.add( pointLight );
-
-    const sphereSize = 1;
-    const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-    scene.add( pointLightHelper );
+    //light
+    createLight("spot");
+   
 }
+
+function createLight(lightType) {
+
+
+    switch (lightType) {
+        case "ambient":
+            light = new THREE.AmbientLight(0xffffff, 4); // soft white light
+            break;
+        case "directional":
+            light = new THREE.DirectionalLight(0xffffff, 3);
+            const directionalHelper = new THREE.DirectionalLightHelper(light, 3);
+            scene.add(directionalHelper);
+            break;
+        case "point":
+            light = new THREE.PointLight(0xffffff, 7, 100);
+            light.position.set(13, 13, 13);
+            const pointHelper = new THREE.PointLightHelper(light, 1);
+            scene.add(pointHelper);
+            break;
+        case "spot":
+            light = new THREE.SpotLight(0xffffff);
+            light.position.set(100, 1000, 100); 
+            const spotHelper = new THREE.SpotLightHelper(light);
+            scene.add(spotHelper);
+            break;
+        default:
+    }
+
+    scene.add(light);
+}
+
 
 // Animación de la escena
 function animate() {
